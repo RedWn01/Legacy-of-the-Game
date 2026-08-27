@@ -551,7 +551,7 @@
 
   // ---------- data refresh ----------
   async function refresh(focus) {
-    const data = await (await fetch('/api/sky')).json();
+    const data = await (await fetch('sky.json')).json();
     layout(data);
     if (focus) glideToStar(focus.year, focus.name, focus.open !== false);
   }
@@ -816,7 +816,7 @@
     cam.z = Math.min(1, Math.max(0.3, Math.min(W / (maxX - minX + 160), H / (maxY - minY + 160))));
   }
 
-  fetch('/api/sky')
+  fetch('sky.json')
     .then(r => r.json())
     .then(data => { layout(data); fitView(); window.__sky = { cam, get clusters() { return clusters; }, toScreen };requestAnimationFrame(draw); })
     .catch(err => console.error('failed to load sky', err));
