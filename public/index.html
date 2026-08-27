@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Legacy of Game Devs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Marcellus&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="sky"></canvas>
+
+<header id="brand">
+  <h1>Legacy of Game Devs</h1>
+  <p>each star holds a quote &mdash; drag to wander</p>
+</header>
+
+<aside id="panel" hidden>
+  <div id="panel-resize"></div>
+  <button id="panel-close" aria-label="close">&times;</button>
+  <p class="panel-year" dir="auto"></p>
+  <h2 class="panel-title" dir="auto"></h2>
+  <div class="panel-quote" dir="auto"></div>
+  <div class="panel-attachments"></div>
+</aside>
+
+<aside id="composer" hidden>
+  <button id="composer-close" aria-label="close">&times;</button>
+  <p class="comp-heading">New Star</p>
+  <div class="comp-row">
+    <label>group
+      <select id="comp-year-select"></select>
+      <input id="comp-year" maxlength="80" placeholder="a group name" dir="auto" hidden>
+    </label>
+    <label>name
+      <input id="comp-name" placeholder="a short title" maxlength="80" dir="auto">
+    </label>
+  </div>
+  <div class="comp-toolbar">
+    <button data-md="**" title="bold"><strong>B</strong></button>
+    <button data-md="*" title="italic"><em>I</em></button>
+    <button data-md="quote" title="quote">&ldquo;&rdquo;</button>
+    <button data-md="heading" title="heading">H</button>
+    <button data-md="list" title="list">&bull;&ndash;</button>
+  </div>
+  <textarea id="comp-text" placeholder="> write the quote here&hellip;" rows="7" dir="auto"></textarea>
+  <p class="comp-heading small">preview</p>
+  <div id="comp-preview" class="panel-quote empty" dir="auto"></div>
+  <label id="comp-attach">
+    <input id="comp-files" type="file" multiple accept="image/*,video/*,.pdf" hidden>
+    + attach images &middot; videos &middot; pdfs
+  </label>
+  <ul id="comp-filelist"></ul>
+  <button id="comp-save">place in the sky</button>
+  <p id="comp-status"></p>
+</aside>
+
+<aside id="archive" hidden>
+  <button id="archive-close" aria-label="close">&times;</button>
+  <p class="comp-heading">Archive</p>
+  <div id="archive-list"></div>
+</aside>
+
+<nav id="actions">
+  <button id="btn-music" title="music on / off ( m )">&#9835;</button>
+  <button id="btn-archive" title="archive ( a )">&#9776;</button>
+  <button id="btn-search" title="search ( / )">&#9906;</button>
+  <button id="btn-drift" title="drift to a random star">&#9732;</button>
+  <button id="btn-new" title="new star">&#10022;</button>
+</nav>
+
+<div id="search" hidden>
+  <input id="search-input" placeholder="find a star&hellip;" autocomplete="off">
+  <ul id="search-results"></ul>
+</div>
+
+<div id="hint">drag to pan &middot; scroll to zoom &middot; tap a star</div>
+
+<script src="app.js"></script>
+</body>
+</html>
