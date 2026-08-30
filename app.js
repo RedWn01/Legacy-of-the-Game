@@ -403,6 +403,7 @@
   const audio = new Audio(MUSIC_URL);
   audio.loop = true;
   audio.preload = 'auto';
+  audio.volume = 0.5;
   let musicOn = true;
   let started = false;
 
