@@ -213,9 +213,11 @@
     }
 
     for (const c of clusters) {
-      // constellation lines: connect each star to its nearest neighbor
-      ctx.strokeStyle = 'rgba(200, 205, 255, 0.14)';
-      ctx.lineWidth = 1;
+      // constellation lines: connect each star to its nearest neighbor,
+      // collecting unique edges so every star is linked to at least one other
+      ctx.strokeStyle = 'rgba(200, 205, 255, 0.35)';
+      ctx.lineWidth = 2;
+      const edges = new Set();
       for (let i = 0; i < c.files.length; i++) {
         let best = -1, bd = Infinity;
         for (let j = 0; j < c.files.length; j++) {
@@ -223,11 +225,14 @@
           const d = (c.files[i].x - c.files[j].x) ** 2 + (c.files[i].y - c.files[j].y) ** 2;
           if (d < bd) { bd = d; best = j; }
         }
-        if (best > i) {
-          const [ax, ay] = toScreen(c.files[i].x, c.files[i].y);
-          const [bx, by] = toScreen(c.files[best].x, c.files[best].y);
-          ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
-        }
+        const [a, b] = i < best ? [i, best] : [best, i];
+        edges.add(`${a},${b}`);
+      }
+      for (const e of edges) {
+        const [i, j] = e.split(',').map(Number);
+        const [ax, ay] = toScreen(c.files[i].x, c.files[i].y);
+        const [bx, by] = toScreen(c.files[j].x, c.files[j].y);
+        ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
       }
 
       // stars
@@ -550,141 +555,23 @@
   }
 
   // ---------- data refresh ----------
+  async function fetchSky() {
+    // static build: data embedded in the page (works even from file://)
+    if (window.__SKY_DATA__) return window.__SKY_DATA__;
+    try {
+      const r = await fetch('/api/sky');
+      if (!r.ok) throw new Error(String(r.status));
+      return await r.json();
+    } catch {
+      return (await fetch('sky.json')).json();
+    }
+  }
+
   async function refresh(focus) {
-    const data = await (await fetch('sky.json')).json();
+    const data = await fetchSky();
     layout(data);
     if (focus) glideToStar(focus.year, focus.name, focus.open !== false);
   }
-
-  // ---------- composer ----------
-  const composer = document.getElementById('composer');
-  const compYearSelect = document.getElementById('comp-year-select');
-  const compYear = document.getElementById('comp-year');
-  const compName = document.getElementById('comp-name');
-  const compText = document.getElementById('comp-text');
-  const compPreview = document.getElementById('comp-preview');
-  const compFiles = document.getElementById('comp-files');
-  const compFileList = document.getElementById('comp-filelist');
-  const compStatus = document.getElementById('comp-status');
-  const compSave = document.getElementById('comp-save');
-  let pendingFiles = [];
-
-  function openComposer() {
-    composer.querySelector('.comp-heading').textContent = 'New Star';
-    const thisYear = String(new Date().getFullYear());
-    const years = [...new Set([...clusters.map(c => c.year), thisYear])].sort().reverse();
-    compYearSelect.innerHTML =
-      years.map(y => `<option value="${y}">${y}</option>`).join('') +
-      '<option value="__other">another group…</option>';
-    compYearSelect.value = thisYear;
-    compYear.hidden = true;
-    compYear.value = '';
-    compName.value = '';
-    compText.value = '';
-    pendingFiles = [];
-    compFileList.innerHTML = '';
-    compStatus.textContent = '';
-    compSave.disabled = false;
-    updatePreview();
-    closePanel();
-    composer.hidden = false;
-    compName.focus();
-  }
-  compYearSelect.addEventListener('change', () => {
-    const other = compYearSelect.value === '__other';
-    compYear.hidden = !other;
-    if (other) compYear.focus();
-  });
-  const chosenYear = () => (compYearSelect.value === '__other' ? compYear.value : compYearSelect.value).trim();
-
-  function closeComposer() { composer.hidden = true; }
-  document.getElementById('composer-close').addEventListener('click', closeComposer);
-  document.getElementById('btn-new').addEventListener('click', () => openComposer());
-
-  function updatePreview() {
-    const md = compText.value.trim();
-    compPreview.classList.toggle('empty', !md);
-    compPreview.dir = isRTL(md) ? 'rtl' : 'ltr';
-    compPreview.innerHTML = md ? renderMarkdown(compText.value) : '';
-  }
-  compText.addEventListener('input', updatePreview);
-
-  // formatting toolbar: wrap selection or insert at line start
-  composer.querySelector('.comp-toolbar').addEventListener('click', e => {
-    const btn = e.target.closest('button[data-md]');
-    if (!btn) return;
-    const kind = btn.dataset.md;
-    const { selectionStart: a, selectionEnd: b, value: v } = compText;
-    let next, cursor;
-    if (kind === '**' || kind === '*') {
-      const sel = v.slice(a, b) || (kind === '**' ? 'bold' : 'softly');
-      next = v.slice(0, a) + kind + sel + kind + v.slice(b);
-      cursor = a + kind.length + sel.length + kind.length;
-    } else {
-      const lineStart = v.lastIndexOf('\n', a - 1) + 1;
-      const prefix = kind === 'quote' ? '> ' : kind === 'heading' ? '# ' : '- ';
-      next = v.slice(0, lineStart) + prefix + v.slice(lineStart);
-      cursor = b + prefix.length;
-    }
-    compText.value = next;
-    compText.setSelectionRange(cursor, cursor);
-    compText.focus();
-    updatePreview();
-  });
-
-  const attachZone = document.getElementById('comp-attach');
-  function queueFiles(list) {
-    for (const f of list) {
-      pendingFiles.push(f);
-      const li = document.createElement('li');
-      li.textContent = f.name;
-      compFileList.appendChild(li);
-    }
-  }
-  compFiles.addEventListener('change', () => { queueFiles(compFiles.files); compFiles.value = ''; });
-  attachZone.addEventListener('dragover', e => { e.preventDefault(); attachZone.classList.add('dragover'); });
-  attachZone.addEventListener('dragleave', () => attachZone.classList.remove('dragover'));
-  attachZone.addEventListener('drop', e => {
-    e.preventDefault();
-    attachZone.classList.remove('dragover');
-    queueFiles(e.dataTransfer.files);
-  });
-
-  compSave.addEventListener('click', async () => {
-    const year = chosenYear();
-    const name = compName.value.trim();
-    const quote = compText.value;
-    if (!year || /[/\\]|^\.|\.\./.test(year)) { compStatus.textContent = 'the group needs a name'; return; }
-    if (!name) { compStatus.textContent = 'every star needs a name'; return; }
-    if (!quote.trim()) { compStatus.textContent = 'a star with no quote gives no light'; return; }
-    compSave.disabled = true;
-    compStatus.textContent = 'placing…';
-    try {
-      let r = await fetch('/api/quote', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ year, name, quote }),
-      });
-      if (!r.ok) throw new Error((await r.json()).error);
-      const items = [...compFileList.children];
-      for (let i = 0; i < pendingFiles.length; i++) {
-        const f = pendingFiles[i];
-        compStatus.textContent = `carrying ${f.name}…`;
-        r = await fetch(`/api/upload?year=${encodeURIComponent(year)}&name=${encodeURIComponent(name)}&filename=${encodeURIComponent(f.name)}`, {
-          method: 'POST',
-          body: f,
-        });
-        if (!r.ok) throw new Error((await r.json()).error);
-        items[i].classList.add('done');
-      }
-      compStatus.textContent = 'it shines.';
-      await refresh({ year, name });
-      setTimeout(closeComposer, 700);
-    } catch (err) {
-      compStatus.textContent = 'the sky refused: ' + err.message;
-      compSave.disabled = false;
-    }
-  });
 
   // ---------- search ----------
   const search = document.getElementById('search');
@@ -767,7 +654,6 @@
         archiveList.appendChild(btn);
       }
     }
-    composer.hidden = true;
     archive.hidden = false;
   }
   function closeArchive() { archive.hidden = true; }
@@ -788,7 +674,6 @@
     const typing = /^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName);
     if (e.key === 'Escape') {
       if (!search.hidden) closeSearch();
-      else if (!composer.hidden) closeComposer();
       else if (!archive.hidden) closeArchive();
       else closePanel();
     } else if (e.key === '/' && !typing) {
@@ -796,8 +681,6 @@
       openSearch();
     } else if (e.key === 'm' && !typing) {
       toggleMusic();
-    } else if (e.key === 'n' && !typing && composer.hidden) {
-      openComposer();
     } else if (e.key === 'a' && !typing && archive.hidden) {
       openArchive();
     }
@@ -816,8 +699,7 @@
     cam.z = Math.min(1, Math.max(0.3, Math.min(W / (maxX - minX + 160), H / (maxY - minY + 160))));
   }
 
-  fetch('sky.json')
-    .then(r => r.json())
+  fetchSky()
     .then(data => { layout(data); fitView(); window.__sky = { cam, get clusters() { return clusters; }, toScreen };requestAnimationFrame(draw); })
     .catch(err => console.error('failed to load sky', err));
 })();

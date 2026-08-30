@@ -205,37 +205,10 @@ html, body {
 }
 .panel-attachments a.pdf:hover { background: rgba(255, 217, 138, 0.08); }
 
-/* ---------- composer ---------- */
-#composer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: min(460px, 100vw);
-  background: var(--panel-bg);
-  backdrop-filter: blur(14px);
-  border-right: 1px solid rgba(255, 217, 138, 0.18);
-  padding: 56px 36px 40px;
-  overflow-y: auto;
-  z-index: 12;
-  animation: slideinL 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
 @keyframes slideinL {
   from { transform: translateX(-40px); opacity: 0; }
   to { transform: none; opacity: 1; }
 }
-#composer-close {
-  position: absolute;
-  top: 14px;
-  right: 18px;
-  background: none;
-  border: none;
-  color: var(--ink-dim);
-  font-size: 30px;
-  line-height: 1;
-  cursor: pointer;
-}
-#composer-close:hover { color: var(--gold); }
 
 .comp-heading {
   font-family: 'Changa', 'Marcellus', 'Amiri', serif;
@@ -244,131 +217,6 @@ html, body {
   text-transform: uppercase;
   color: var(--gold);
   margin-bottom: 22px;
-}
-.comp-heading.small { font-size: 10px; margin: 24px 0 10px; color: var(--ink-dim); }
-
-.comp-row { display: flex; gap: 14px; margin-bottom: 18px; }
-.comp-row label {
-  flex: 1;
-  font-family: 'Changa', 'Marcellus', 'Amiri', serif;
-  font-size: 10px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-}
-.comp-row label:first-child { flex: 0 0 90px; }
-.comp-row select {
-  display: block;
-  width: 100%;
-  margin-top: 6px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
-  color: var(--ink);
-  font-family: 'Changa', 'Cormorant Garamond', 'Amiri', serif;
-  font-size: 17px;
-  padding: 9px 8px;
-  cursor: pointer;
-}
-.comp-row select:focus { outline: none; border-color: rgba(255, 217, 138, 0.5); }
-.comp-row select option { background: #0d1526; }
-.comp-row input[hidden] { display: none; }
-.comp-row input, #comp-text {
-  display: block;
-  width: 100%;
-  margin-top: 6px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
-  color: var(--ink);
-  font-family: 'Changa', 'Cormorant Garamond', 'Amiri', serif;
-  font-size: 17px;
-  padding: 9px 12px;
-}
-.comp-row input:focus, #comp-text:focus {
-  outline: none;
-  border-color: rgba(255, 217, 138, 0.5);
-}
-
-.comp-toolbar { display: flex; gap: 6px; margin-bottom: 8px; }
-.comp-toolbar button {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
-  color: var(--ink);
-  font-family: 'Changa', 'Cormorant Garamond', 'Amiri', serif;
-  font-size: 15px;
-  width: 34px;
-  height: 30px;
-  cursor: pointer;
-}
-.comp-toolbar button:hover { border-color: rgba(255, 217, 138, 0.5); color: var(--gold); }
-
-#comp-text { resize: vertical; line-height: 1.5; min-height: 130px; }
-
-#comp-preview {
-  border: 1px dashed rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
-  padding: 16px 18px;
-  min-height: 60px;
-  font-size: 19px;
-}
-#comp-preview.empty::before {
-  content: 'the quote will glow here';
-  color: var(--ink-dim);
-  font-style: italic;
-  font-size: 15px;
-}
-
-#comp-attach {
-  display: block;
-  margin-top: 20px;
-  padding: 12px;
-  text-align: center;
-  border: 1px dashed rgba(255, 217, 138, 0.35);
-  border-radius: 4px;
-  color: var(--ink-dim);
-  font-family: 'Changa', 'Marcellus', 'Amiri', serif;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-#comp-attach:hover, #comp-attach.dragover { color: var(--gold); border-color: var(--gold); }
-#comp-filelist { list-style: none; margin-top: 10px; }
-#comp-filelist li {
-  font-size: 15px;
-  color: var(--ink-dim);
-  padding: 3px 0;
-  font-style: italic;
-}
-#comp-filelist li.done { color: var(--gold); }
-
-#comp-save {
-  display: block;
-  width: 100%;
-  margin-top: 24px;
-  padding: 13px;
-  background: rgba(255, 217, 138, 0.12);
-  border: 1px solid rgba(255, 217, 138, 0.5);
-  border-radius: 4px;
-  color: var(--gold);
-  font-family: 'Changa', 'Marcellus', 'Amiri', serif;
-  font-size: 13px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-#comp-save:hover { background: rgba(255, 217, 138, 0.22); }
-#comp-save:disabled { opacity: 0.4; cursor: default; }
-#comp-status {
-  margin-top: 12px;
-  font-style: italic;
-  font-size: 15px;
-  color: var(--ink-dim);
-  min-height: 1.2em;
-  text-align: center;
 }
 
 /* ---------- archive ---------- */
