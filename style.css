@@ -204,6 +204,7 @@ html, body {
   letter-spacing: 0.08em;
 }
 .panel-attachments a.pdf:hover { background: rgba(255, 217, 138, 0.08); }
+.panel-attachments .drive-icon { margin-right: 8px; }
 
 @keyframes slideinL {
   from { transform: translateX(-40px); opacity: 0; }

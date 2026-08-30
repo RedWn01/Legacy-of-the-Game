@@ -72,7 +72,7 @@
           phase: r() * Math.PI * 2,
         };
       });
-      return { year: y.year, cx, cy, spread, files, attachments: y.attachments };
+      return { year: y.year, cx, cy, spread, files, attachments: y.attachments, driveUrl: y.driveUrl };
     });
 
     // static background starfield in world space, on two depth layers for parallax
@@ -474,27 +474,21 @@
     quoteEl.dir = isRTL(star.quote) ? 'rtl' : 'ltr';
     const attEl = panel.querySelector('.panel-attachments');
     attEl.innerHTML = '';
-    if (star.attachments.length) {
+    if (cluster.driveUrl) {
       const label = document.createElement('p');
       label.className = 'att-label';
       label.textContent = 'Attachments';
       attEl.appendChild(label);
-      for (const a of star.attachments) {
-        if (a.type === 'image') {
-          const img = document.createElement('img');
-          img.src = a.url; img.alt = a.name; img.loading = 'lazy';
-          attEl.appendChild(img);
-        } else if (a.type === 'video') {
-          const v = document.createElement('video');
-          v.src = a.url; v.controls = true; v.playsInline = true;
-          attEl.appendChild(v);
-        } else {
-          const link = document.createElement('a');
-          link.className = 'pdf'; link.href = a.url; link.target = '_blank';
-          link.textContent = '\u{1F4C4} ' + a.name;
-          attEl.appendChild(link);
-        }
-      }
+      const link = document.createElement('a');
+      link.className = 'pdf';
+      link.href = cluster.driveUrl;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      const driveIcon = document.createElement('span');
+      driveIcon.className = 'drive-icon';
+      driveIcon.textContent = '\u25C9';
+      link.append(driveIcon, ' Open in Google Drive');
+      attEl.appendChild(link);
     }
     panel.hidden = false;
   }
