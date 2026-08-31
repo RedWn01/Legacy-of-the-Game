@@ -17,7 +17,8 @@
 
   // deterministic pseudo-random from a string seed
   function seeded(str) {
-    let h = 2166136261;
+    let h = 5028730813;
+    // let h = Math.floor(Math.random() * 4294967296);
     for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
     return () => {
       h ^= h << 13; h ^= h >>> 17; h ^= h << 5;
@@ -39,18 +40,18 @@
     const n = years.length || 1;
     // clusters scattered across a 2D field (golden-angle spiral + jitter)
     const aspect = Math.max(W / H, 0.6);
-    const spanX = Math.max(1600, n * 300) * aspect;
-    const spanY = Math.max(1200, n * 300);
+    const spanX = Math.max(1800, n * 350) * aspect;
+    const spanY = Math.max(1800, n * 350);
     clusters = years.map((y, i) => {
-      const rand = seeded('cluster:' + y.year);
+      const rand = seeded('cluster:' + y.year + ':v2');
       const t = n === 1 ? 0.5 : i / (n - 1);
       const ang = i * 2.39996 + rand() * 0.8;      // golden angle keeps arms apart
       const rad = Math.sqrt(t);
       const cx = Math.cos(ang) * rad * spanX * 0.5 + (rand() - 0.5) * 240;
       const cy = Math.sin(ang) * rad * spanY * 0.5 + (rand() - 0.5) * 240;
-      const spread = 90 + Math.sqrt(y.files.length) * 55;
+      const spread = 140 + Math.sqrt(y.files.length) * 80;
       const files = y.files.map(f => {
-        const r = seeded(y.year + '/' + f.name);
+        const r = seeded(y.year + '/' + f.name + ':v2');
         if (f.name.toLowerCase() === 'overview') {
           // the overview node anchors the heart of its cluster
           return {
@@ -62,8 +63,8 @@
           };
         }
         const ang = r() * Math.PI * 2;
-        // keep the middle clear for the overview node (spread >= 90 always)
-        const dist = Math.pow(r(), 0.6) * spread * 0.82 + 18;
+        // keep the middle clear for the overview node (spread >= 140 always)
+        const dist = Math.pow(r(), 0.6) * spread * 0.88 + 60;
         return {
           ...f,
           x: cx + Math.cos(ang) * dist * 1.25,
@@ -315,7 +316,7 @@
   }
 
   canvas.addEventListener('pointerdown', e => {
-    try { canvas.setPointerCapture(e.pointerId); } catch {}
+    try { canvas.setPointerCapture(e.pointerId); } catch { }
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     dragging = true; moved = 0;
     vel.x = vel.y = 0;
@@ -410,12 +411,12 @@
   function startMusic() {          // must be called from a user gesture
     started = true;
     if (!musicOn) return;
-    audio.play().catch(() => {});  // ignore if the file is missing
+    audio.play().catch(() => { });  // ignore if the file is missing
   }
   function toggleMusic() {
     musicOn = !musicOn;
     btnMusic.classList.toggle('off', !musicOn);
-    if (musicOn) { if (started) audio.play().catch(() => {}); }
+    if (musicOn) { if (started) audio.play().catch(() => { }); }
     else audio.pause();
   }
   btnMusic.addEventListener('click', e => { e.stopPropagation(); toggleMusic(); });
@@ -695,6 +696,6 @@
   }
 
   fetchSky()
-    .then(data => { layout(data); fitView(); window.__sky = { cam, get clusters() { return clusters; }, toScreen };requestAnimationFrame(draw); })
+    .then(data => { layout(data); fitView(); window.__sky = { cam, get clusters() { return clusters; }, toScreen }; requestAnimationFrame(draw); })
     .catch(err => console.error('failed to load sky', err));
 })();
