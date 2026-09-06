@@ -117,6 +117,44 @@ html, body {
   transform: none;
 }
 
+/* ---------- dark star ---------- */
+#dark-star {
+  position: fixed;
+  left: 28px;
+  bottom: 18px;
+  display: block;
+  line-height: 0;
+  color: #ffd98a;
+  text-decoration: none;
+  z-index: 8;
+  animation: darkstar-in 2s 1.8s ease both, darkstar-twinkle 3.2s 3s ease-in-out infinite,
+    darkstar-sway 7s 3s ease-in-out infinite;
+}
+#dark-star svg {
+  width: 72px;
+  height: 72px;
+  filter: drop-shadow(0 0 10px rgba(255, 217, 138, 0.45)) drop-shadow(0 0 30px rgba(255, 190, 90, 0.25));
+}
+#dark-star:hover {
+  animation-play-state: paused, paused, paused;
+  color: #ffe9b8;
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+#dark-star:hover svg {
+  filter: drop-shadow(0 0 16px rgba(255, 217, 138, 0.85)) drop-shadow(0 0 50px rgba(255, 190, 90, 0.5));
+}
+@keyframes darkstar-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes darkstar-twinkle {
+  0%, 100% { filter: brightness(0.95); }
+  30% { filter: brightness(1.15); }
+  60% { filter: brightness(1); }
+}
+@keyframes darkstar-sway {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
 #hint {
   position: fixed;
   bottom: 20px;
