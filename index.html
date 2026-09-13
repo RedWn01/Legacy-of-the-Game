@@ -1,50 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Legacy of the Game</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Changa:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Marcellus&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Legacy of the Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Changa:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Marcellus&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<canvas id="sky"></canvas>
+  <canvas id="sky"></canvas>
 
-<header id="brand">
-  <h1>Legacy of Game Devs</h1>
-  <p id="brand-tagline" data-tip="&quot;To the stars through hardships&quot; Or &quot; Through difficulties to the heights&quot; &middot; hard work and struggle lead to success">Ad Astra per Aspera</p>
-</header>
+  <header id="brand">
+    <h1>Legacy of Game Devs</h1>
+    <p id="brand-tagline"
+      data-tip="&quot;To the stars through hardships&quot; Or &quot; Through difficulties to the heights&quot; &middot; hard work and struggle lead to success">
+      Ad Astra per Aspera</p>
+  </header>
 
-<aside id="panel" hidden>
-  <div id="panel-resize"></div>
-  <button id="panel-close" aria-label="close">&times;</button>
-  <p class="panel-year" dir="auto"></p>
-  <h2 class="panel-title" dir="auto"></h2>
-  <div class="panel-quote" dir="auto"></div>
-  <div class="panel-attachments"></div>
-</aside>
+  <aside id="panel" hidden>
+    <div id="panel-resize"></div>
+    <button id="panel-close" aria-label="close">&times;</button>
+    <p class="panel-year" dir="auto"></p>
+    <h2 class="panel-title" dir="auto"></h2>
+    <div class="panel-quote" dir="auto"></div>
+    <div class="panel-attachments"></div>
+  </aside>
 
-<aside id="archive" hidden>
-  <button id="archive-close" aria-label="close">&times;</button>
-  <p class="comp-heading">Archive</p>
-  <div id="archive-list"></div>
-</aside>
+  <aside id="archive" hidden>
+    <button id="archive-close" aria-label="close">&times;</button>
+    <p class="comp-heading">Archive</p>
+    <div id="archive-list"></div>
+  </aside>
 
-<nav id="actions">
-  <button id="btn-music" title="music on / off ( m )">&#9835;</button>
-  <button id="btn-archive" title="archive ( a )">&#9776;</button>
-  <button id="btn-search" title="search ( / )">&#9906;</button>
-  <button id="btn-drift" title="drift to a random star">&#9732;</button>
-</nav>
+  <nav id="actions">
+    <button id="btn-music" title="music on / off ( m )">&#9835;</button>
+    <button id="btn-archive" title="archive ( a )">&#9776;</button>
+    <button id="btn-search" title="search ( / )">&#9906;</button>
+    <button id="btn-drift" title="drift to a random star">&#9732;</button>
+  </nav>
 
-<div id="search" hidden>
-  <input id="search-input" placeholder="find a star&hellip;" autocomplete="off">
-  <ul id="search-results"></ul>
-</div>
+  <div id="search" hidden>
+    <input id="search-input" placeholder="find a star&hellip;" autocomplete="off">
+    <ul id="search-results"></ul>
+  </div>
 
-<a id="dark-star" href="https://larpyblorb.servequake.com/c/legacy_of_the_game" target="_blank" rel="noopener" title="Legacy of the Game">
+  <!-- <a id="dark-star" href="https://larpyblorb.servequake.com/c/legacy_of_the_game" target="_blank" rel="noopener" title="Legacy of the Game">
   <svg viewBox="0 0 64 64" width="84" height="84" aria-hidden="true">
     <g fill="currentColor">
       <circle cx="32" cy="22" r="9"/>
@@ -55,10 +61,11 @@
       <path d="M62 46c0-6-4.8-9.7-11-9.7-2.2 0-4.2.6-5.9 1.7 2.5 2.4 4 5.6 4 9.2v3h12.9z" opacity="0.75"/>
     </g>
   </svg>
-</a>
+</a> -->
 
-<div id="hint">drag to pan &middot; scroll to zoom &middot; tap a star</div>
+  <div id="hint">drag to pan &middot; scroll to zoom &middot; tap a star</div>
 
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
+
 </html>
